@@ -18,7 +18,7 @@ More info is forth coming, but here are the basic steps:
 7. Now you have 2 directions to choose.  I like to do this:
 8. Open the project in REVO Scan 5 and click on the SCAN that has tracking problem.
 9. Click on the 3 dots [...] and select "Edit Key Frames" ![REVO_3](https://github.com/user-attachments/assets/aa958598-0d60-4560-9dd7-42358c4b6f13)
-10. We can the example the scan is way out of alignment.  Press the [PLAY] button and watch the scan progress.  We are looking for 2 things.  How many time there are alignment issues and which frame.  Makes note on number of errors and which frames they occure.
+10. We can the example the scan is way out of alignment.  Press the [PLAY] button and watch the scan progress.  We are looking for 2 things.  How many time there are alignment issues and which frame.  Makes note on number of errors and which frames they occur.
 11. In this example, the alignments goes bad at frame 500. ![REVO_4](https://github.com/user-attachments/assets/9c57cf1d-fcf0-4eed-b5f3-fd3b54e6cc90)
 12. When you have made your notes on number of alignment errors and which frames that start, go back to the REVOMOD app.
 13. Select the Model in the [Scan in Project] list and then Press [DUPLICATE FOLDER] ![Revo_5](https://github.com/user-attachments/assets/46c157d0-3171-4810-a3ef-63eec150a65e)
