@@ -51,8 +51,11 @@ My working notes...
 ----> .inf = unknown binary data (probably camera/sensor/IMU data), also contains "DELETED" frame flag from KEY FRAMES
 
 00 00 00 00 01 02 00 02 00 1B B7 00 FF FF FF FF <--- SHOWS file in Key Frame listbox
+
 00 00 00 00 01 03 01 02 00 00 00 00 FC FF FF FF <--- HIDES file in Key Frame listbox
+
 == == == == == ^^ ^^ == == ^^ ^^ == ^^ == == ==
+
   +------------|| ||
   |
   This flag seems to control if the file is "HIDDEN" in the key frame view.
