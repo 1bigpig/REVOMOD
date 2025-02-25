@@ -3,6 +3,8 @@ REVOPoint Key Frame Editor
 
 ALWAYS WORK FROM A COPY OF YOUR SCAN DATA!!!
 
+This work, the code and myself are not affiliated with RevoPoint in any way, other than being an owner of one or more of their 3d scanners.  This is a tool that I made for myself and figured someone else might find it userful as well.
+
 This is a very basic RevoPoint REVO Scan 5 frame editor that will HIDE/SHOW frames.  It will also duplicate SCAN project folders to allow a single scan to be broken up into mutiliple scans.
 This can be useful when you have a scan that has lost tracking but are unable to rescan the item (due to time, travel or other factors).
 
