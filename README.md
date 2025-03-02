@@ -30,38 +30,13 @@ More info is forth coming, but here are the basic steps:
 
 19. That is the basic.  The rest needs more work but here is what I know so far...
 20. REVO Scan 5 does not really delete Key Frames.  It just FLAGs them as invisible to the model.  You are recover deleted key frames by selecting the [SCANS IN PROJECT] and then pressing [SELECT FOLDER]
-21. The [SCAN FRAMES] window will populate with ALL the scan flag files in each Scan Project.
-22. You can select all files and then press [SHOW FRAMES] and it will reset the flags to VISIBLE in that SCAN PROJECT FOLDER.  You must quit and reload the REVO Project for these changes to take effect (I am guessing CASHE memory clearing required)
-23. You can also HIDE and SHOW KEY FRAMES in this window.  REVO Scan5 starts with FRAME 0 and then increaments by 2 [0,2,4,6 etc].  The list _SHOULD_ be in the the same order but I have been unable to fully verify that.
-![Revo_7](https://github.com/user-attachments/assets/7d0fd302-127a-4b71-925d-529fc41ad2d7)
+21. The [SCAN FRAMES] window will populate with ALL the scan flag files in each Scan Project. The Frame numbers will correspond with the Frame Numbers in REVO Scan 5.
+22. You can select the frames you want to show and then press [SHOW FRAMES] and it will reset the flags to VISIBLE in that SCAN PROJECT FOLDER.  You must quit and reload the REVO Project for these changes to take effect (I am guessing CASHE memory clearing required)
+23. You can also HIDE KEY FRAMES in this window.  REVO Scan5 starts with FRAME 0 and then increaments by 2 [0,2,4,6 etc].  The list _SHOULD_ be in the the same order but I have been unable to fully verify that.
+![REVOMOD_8](https://github.com/user-attachments/assets/3c1ff859-6da1-4d89-87ec-9fb2ee7cee3d)
+
 NOTE:  The SHOW/HIDE flag is not fully vetted.  This is what I know so far.  ALWAYS WORK FROM A COPY
 
-My working notes...
-
-1. Need to load the Project*.REVO file.  This file will set the location for the 
-./data/ [FOLDERS]
-
-./data/[FOLDER]/cache/
-
-# IF # there is color scanning enabled, there will be 3 FILES.  If not color scanning is enabled, there will only be 2
-
---> 3 files for each "frame".  Each 3 files have the exact same name, just extension is different
-----> .dph = depth data
-----> .img = JPG format image file !- Only present if color scanning is enabled
-----> .inf = unknown binary data (probably camera/sensor/IMU data), also contains "DELETED" frame flag from KEY FRAMES
-
-00 00 00 00 01 02 00 02 00 1B B7 00 FF FF FF FF <--- SHOWS file in Key Frame listbox
-
-00 00 00 00 01 03 01 02 00 00 00 00 FC FF FF FF <--- HIDES file in Key Frame listbox
-
-== == == == == ^^ ^^ == == ^^ ^^ == ^^ == == ==
-
-  +------------|| ||
-  |
-  This flag seems to control if the file is "HIDDEN" in the key frame view.
-  02 00 = SHOW
-  03 01 = HIDE
-  !- File must be closed and then reopened to clear out the program data cache and reload the data for flag change to show up
-
 Bruce Clark
-02-25-02025
+version 0.2a
+03-02-02025
