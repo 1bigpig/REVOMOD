@@ -58,6 +58,8 @@
 %IDC_TEXTBOX1 = 1001
 %IDC_TEXTBOX2 = 1012
 %IDD_DIALOG1  =  101
+%IDC_LISTVIEW32 = 1020
+
 #PBFORMS END CONSTANTS
 %FILEMAX  = 4000        ' max files in SCAN Frames, too many and programs slows WAY down
 '----------------------------------------------------------------------------------------------------------------------
@@ -65,7 +67,7 @@
 '--------------------------------------------------------------------------------
 '   ** Version Information **
 '--------------------------------------------------------------------------------
-$Version="Version 0.1a © 2025 Bruce Clark"
+$Version="Version 0.2a Â© 2025 Bruce Clark"
 
 $INIFile="REVOMOD.INI"
 
@@ -94,6 +96,7 @@ DECLARE FUNCTION SaveTextFile(sFileName AS STRING, NewFile AS STRING) AS LONG
 DECLARE SUB CopyFolder( CBHdl AS DWORD, sFileInPath AS STRING,sFileName AS STRING,sNewFolderName AS STRING)
 DECLARE SUB UpdateREVOProject(sFileName AS STRING,sNewFolderName AS STRING, AppendText AS STRING)
 DECLARE FUNCTION EditShowHide(sFileName AS STRING, lShow AS LONG) AS LONG
+DECLARE FUNCTION GetShowHide(sFileName AS STRING) AS LONG
 '----------------------------------------------------------------------------------------------------------------------
 
 '----------------------------------------------------------------------------------------------------------------------
@@ -101,8 +104,6 @@ DECLARE FUNCTION EditShowHide(sFileName AS STRING, lShow AS LONG) AS LONG
 '----------------------------------------------------------------------------------------------------------------------
 FUNCTION PBMAIN()
     PBFormsInitComCtls (%ICC_WIN95_CLASSES OR %ICC_DATE_CLASSES OR %ICC_INTERNET_CLASSES)
-
-'    LoadSettings(GetINIFileName)        'Load INI defaults or last settings
 
     ShowDIALOG1 %HWND_DESKTOP
 END FUNCTION
@@ -123,7 +124,7 @@ DIM x  AS INTEGER
 LOCAL LBHndl AS DWORD
 LOCAL result AS LONG
 LOCAL nFile AS LONG
-LOCAL TmpAsciiz AS ASCIIZ*%Max_Path
+LOCAL TmpAsciiz AS ASCIIZ*%MAX_PATH
 LOCAL iFile AS LONG
 LOCAL lAppendInstead AS LONG
 LOCAL lAppendPrepend AS LONG
@@ -170,7 +171,7 @@ LOCAL lTotalItems AS LONG
         CASE %WM_COMMAND
             ' Process control notifications
             SELECT CASE AS LONG CBCTL
-                CASE %IDC_BUTTON1
+                CASE %IDC_BUTTON1               'Open REVO PROJECT
                     IF CBCTLMSG = %BN_CLICKED OR CBCTLMSG = 1 THEN
 ' we need to load the .REVO File and load contents of that file into the TEXTBOX2
                         sFileName = OpenREVOFile()                           'Open a file via the Common Controls in Win32
@@ -200,7 +201,7 @@ LOCAL lTotalItems AS LONG
 '                    END IF
 
 
-                CASE %IDC_BUTTON4
+                CASE %IDC_BUTTON4               'DUPLICATE FOLDER
 'Duplicate Folder (SCAN DATA)
                     IF CBCTLMSG = %BN_CLICKED OR CBCTLMSG = 1 THEN
 ' Ask for new name of folder
@@ -238,7 +239,7 @@ LOCAL lTotalItems AS LONG
 
                     END IF
 
-                CASE %IDC_BUTTON5
+                CASE %IDC_BUTTON5               'SAVE REVO PROJECT
                     IF CBCTLMSG = %BN_CLICKED OR CBCTLMSG = 1 THEN
 ' Save REVO Project File
 '
@@ -254,7 +255,8 @@ LOCAL lTotalItems AS LONG
                     END IF
 
 
-                CASE %IDC_BUTTON6
+
+                CASE %IDC_BUTTON6               'SELECT FOLDER
                     IF CBCTLMSG = %BN_CLICKED OR CBCTLMSG = 1 THEN
 ' Get highlighted Folder to view frames
 ' Load second listbox with .inf file in "frame" order
@@ -271,23 +273,25 @@ LOCAL lTotalItems AS LONG
                         sFileInPath=sFileInPath+"data\"+AppendText+"\cache\"
                         Directory=sFileInPath
 
- '                       CONTROL HANDLE hDlg,  %IDC_LISTBOX2 TO LBHndl
-                        LISTBOX RESET hDlg, %IDC_LISTBOX2
+                        LISTVIEW RESET hDlg,%IDC_LISTVIEW32
+
                         IF Directory>"" THEN
                             LoadINFList (directory)                            'Get all the folders in the directory
                         END IF
 
                     END IF
 
-                CASE %IDC_BUTTON2
+
+
+                CASE %IDC_BUTTON2               'HIDE FRAME
                     IF CBCTLMSG = %BN_CLICKED OR CBCTLMSG = 1 THEN
 ' Hide Frames
 ' TRaverse list looking for select files
-                        LISTBOX GET COUNT hDlg,  %IDC_LISTBOX2 TO lTotalItems
+                        LISTVIEW GET COUNT hDlg,  %IDC_LISTVIEW32 TO lTotalItems
                         FOR x=1 TO lTotalItems
-                            LISTBOX GET STATE hDlg, %IDC_LISTBOX2, x TO result
+                            LISTVIEW GET STATE hDlg, %IDC_LISTVIEW32, x,1 TO result
                             IF result<>0  THEN
-                                LISTBOX GET TEXT hDlg,%IDC_LISTBOX2, x TO AppendText
+                                LISTVIEW GET TEXT hDlg,%IDC_LISTVIEW32, x,3 TO AppendText
                                 sFileInPath=Directory+AppendText
 '                                msgbox sFileInPath
 ' open file and toggle hide/show byte
@@ -301,15 +305,15 @@ LOCAL lTotalItems AS LONG
 
                     END IF
 
-                CASE %IDC_BUTTON3
+                CASE %IDC_BUTTON3               'SHOW FRAME
                     IF CBCTLMSG = %BN_CLICKED OR CBCTLMSG = 1 THEN
 ' Show Frames
 ' TRaverse list looking for select files
-                        LISTBOX GET COUNT hDlg,  %IDC_LISTBOX2 TO lTotalItems
+                        LISTVIEW GET COUNT hDlg,  %IDC_LISTVIEW32 TO lTotalItems
                         FOR x=1 TO lTotalItems
-                            LISTBOX GET STATE hDlg, %IDC_LISTBOX2, x TO result
+                            LISTVIEW GET STATE hDlg, %IDC_LISTVIEW32, x,1 TO result
                             IF result<>0  THEN
-                                LISTBOX GET TEXT hDlg,%IDC_LISTBOX2, x TO AppendText
+                                LISTVIEW GET TEXT hDlg,%IDC_LISTVIEW32, x,3 TO AppendText
                                 sFileInPath=Directory+AppendText
 '                                msgbox sFileInPath
 ' open file and toggle hide/show byte
@@ -321,8 +325,11 @@ LOCAL lTotalItems AS LONG
 ' deselect list when done
                         CONTROL SEND hDlg, %IDC_BUTTON6, %BM_CLICK, 0, 0
                     END IF
-'                CASE %IDC_LISTBOX1
 
+                CASE %IDC_LISTBOX1
+                    IF CBCTLMSG = %BN_CLICKED OR CBCTLMSG = 1 THEN
+                        LISTVIEW RESET hDlg,%IDC_LISTVIEW32
+                    END IF
 
             END SELECT
     END SELECT
@@ -363,9 +370,6 @@ FUNCTION ShowDIALOG1(BYVAL hParent AS DWORD) AS LONG
     CONTROL ADD LISTBOX, hDlg, %IDC_LISTBOX1, , 5, 65, 210, 300, %WS_CHILD OR %WS_VISIBLE OR %WS_BORDER OR _
         %WS_TABSTOP OR %WS_VSCROLL OR %LBS_SORT OR %LBS_NOTIFY, %WS_EX_CLIENTEDGE OR %WS_EX_LEFT OR _
         %WS_EX_LTRREADING OR %WS_EX_RIGHTSCROLLBAR
-    CONTROL ADD LISTBOX, hDlg, %IDC_LISTBOX2, , 460, 65, 230, 300, %WS_CHILD OR %WS_VISIBLE OR %WS_BORDER OR _
-        %WS_TABSTOP OR %WS_VSCROLL OR %LBS_MULTIPLESEL OR %LBS_SORT OR %LBS_NOTIFY OR %LBS_EXTENDEDSEL, _
-        %WS_EX_CLIENTEDGE OR %WS_EX_LEFT OR %WS_EX_LTRREADING OR %WS_EX_RIGHTSCROLLBAR
     CONTROL ADD TEXTBOX, hDlg, %IDC_TEXTBOX1, "", 110, 25, 570, 20, %WS_CHILD OR %WS_VISIBLE OR %WS_TABSTOP OR _
         %ES_LEFT, %WS_EX_CLIENTEDGE OR %WS_EX_LEFT OR %WS_EX_LTRREADING OR %WS_EX_RIGHTSCROLLBAR
     CONTROL ADD LABEL,   hDlg, %IDC_LABEL1, "SCANS IN PROJECT", 5, 50, 210, 10
@@ -373,9 +377,19 @@ FUNCTION ShowDIALOG1(BYVAL hParent AS DWORD) AS LONG
     CONTROL ADD BUTTON,  hDlg, %IDC_BUTTON6, "SELECT FOLDER", 110, 370, 100, 25
     CONTROL ADD LABEL,   hDlg, %IDC_LABEL3, "SCAN FRAMES", 460, 50, 210, 10
     CONTROL ADD LABEL,   hDlg, %IDC_LABEL4, $VERSION, 345, 5, 335, 15
-#PBFORMS END DIALOG
 
-'    SampleListBox  hDlg, %IDC_LISTBOX1, 30
+    CONTROL ADD "SysListView32", hDlg, %IDC_LISTVIEW32, "SysListView32_1",  460, 65, 230, 300, %WS_CHILD OR _
+        %WS_VISIBLE OR %WS_TABSTOP OR %LVS_REPORT OR %LVS_SHOWSELALWAYS OR %LVS_ALIGNLEFT OR %LVS_SHOWSELALWAYS,_
+        %WS_EX_LEFT OR %WS_EX_CLIENTEDGE OR _
+        %WS_EX_RIGHTSCROLLBAR
+
+#PBFORMS END DIALOG
+  LISTVIEW RESET hDlg, %IDC_LISTVIEW32
+
+  LISTVIEW INSERT COLUMN hDlg, %IDC_LISTVIEW32, 1, "Frame", 40, 1
+  LISTVIEW INSERT COLUMN hDlg, %IDC_LISTVIEW32, 2, "SHOW/HIDE", 80, 2
+  LISTVIEW INSERT COLUMN hDlg, %IDC_LISTVIEW32, 3, "File", 80, 1
+
 
     DIALOG SHOW MODAL hDlg, CALL ShowDIALOG1Proc TO lRslt
 
@@ -387,9 +401,6 @@ END FUNCTION
 '----------------------------------------------------------------------------------------------------------------------
 
 '------------------------------------------------------------------------------
-
-
-
 FUNCTION GetDirectory() AS STRING
 
 LOCAL   Success AS LONG,_
@@ -434,14 +445,23 @@ SUB LoadINFList (DirPath AS STRING)
 
 LOCAL FileCount AS LONG
 LOCAL sFile AS STRING
-
+LOCAL lFrameNumber AS LONG
 
         FileCount=0
         sFile=DIR$(DirPath+"*.INF")                  'Get the first file in the path
 '        sFile=DIR$(DirPath,16)                      'Just list Folders (16 = %SUBDIR )
         WHILE LEN(sFile) AND FileCount < 10000 ' max = 10000
+            lFrameNumber=FileCount*2
             INCR FileCount
-            LISTBOX ADD hDlg,%IDC_LISTBOX2, sFile
+             LISTVIEW INSERT ITEM hDlg,%IDC_LISTVIEW32 ,FileCount,0, STR$(lFrameNumber)
+              IF GetShowHide(DirPath+sFile)<>0 THEN
+                 LISTVIEW SET TEXT    hDlg,%IDC_LISTVIEW32 ,FileCount,2, "HIDE"
+              ELSE
+                 LISTVIEW SET TEXT    hDlg,%IDC_LISTVIEW32 ,FileCount,2, "SHOW"
+              END IF
+
+
+             LISTVIEW SET TEXT    hDlg,%IDC_LISTVIEW32 ,FileCount,3, sFile
             sFile = DIR$
         WEND
 
@@ -674,6 +694,11 @@ FUNCTION EditShowHide(sFileName AS STRING, lShow AS LONG) AS LONG
     DIM sTextFile AS STRING
     DIM lLength AS LONG
     DIM lLoop AS LONG
+    LOCAL bTrue AS BYTE
+    LOCAL bFalse AS BYTE
+
+    bTrue=1
+    bFalse=0
 
     ERRCLEAR
     iFile=FREEFILE
@@ -682,13 +707,15 @@ FUNCTION EditShowHide(sFileName AS STRING, lShow AS LONG) AS LONG
         MSGBOX "Unable to Open File",%MB_ICONERROR, STR$(ERR)
         EXIT FUNCTION
     END IF
-    SEEK #iFile,6                          'Set the file position to start of file
-'    GET$ #iFile, LOF(#iFile), sTextFile    'Load the file into memory in one go
+
+'    SEEK #iFile,7                          'Set the file position to start of file
     IF lShow<>0 THEN
-        PUT$ #iFile,CHR$(02)+CHR$(00)   'Show
+        PUT #iFile,7, bFalse          'Show
     ELSE
-        PUT$ #iFile,CHR$(03)+CHR$(01)   'Hide
+        PUT #iFile,7, bTrue           'Hide
     END IF
+
+
                        'Write the file
     IF ERR >0 THEN
         MSGBOX "Unable to write File",%MB_ICONERROR, STR$(ERR)
@@ -697,6 +724,36 @@ FUNCTION EditShowHide(sFileName AS STRING, lShow AS LONG) AS LONG
 
     CLOSE iFile                        'Close up file and free handle
     FUNCTION = ERR
+END FUNCTION
+
+'------------------------------------------------------------------------------
+
+'--------------------------------------------------------------------------------
+'   Get SHOW/HIDE of INF file
+'--------------------------------------------------------------------------------
+FUNCTION GetShowHide(sFileName AS STRING) AS LONG
+'sFileName      --  text file name passed in to load data
+'lShow          --  State of Show or hide 0=HIDE, >0 SHOW
+'RETURN         --  Value of Flag 0=SHOW 1=HIDE
+
+    DIM iFile AS LONG
+    DIM sTextFile AS STRING
+    DIM lLength AS LONG
+    DIM lLoop AS LONG
+    LOCAL bFlag AS BYTE
+
+    ERRCLEAR
+    iFile=FREEFILE
+    OPEN sFileName FOR BINARY AS #iFile    'Open the file as a binary for one large read
+    IF ERR >0 THEN
+        MSGBOX "Unable to Open File",%MB_ICONERROR, STR$(ERR)
+        EXIT FUNCTION
+    END IF
+'    SEEK #iFile,7                          'Set the file position to start of file
+    GET #iFile, 7, bFlag    'Load the file into memory in one go
+
+    CLOSE iFile                        'Close up file and free handle
+    FUNCTION = bFlag
 END FUNCTION
 
 '------------------------------------------------------------------------------
