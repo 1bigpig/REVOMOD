@@ -33,7 +33,7 @@ More info is forth coming, but here are the basic steps:
 21. The [SCAN FRAMES] window will populate with ALL the scan flag files in each Scan Project. The Frame numbers will correspond with the Frame Numbers in REVO Scan 5.
 22. You can select the frames you want to show and then press [SHOW FRAMES] and it will reset the flags to VISIBLE in that SCAN PROJECT FOLDER.  You must quit and reload the REVO Project for these changes to take effect (I am guessing CASHE memory clearing required)
 23. You can also HIDE KEY FRAMES in this window.  REVO Scan5 starts with FRAME 0 and then increaments by 2 [0,2,4,6 etc].  The list _SHOULD_ be in the the same order but I have been unable to fully verify that.
-![REVOMOD_8](https://github.com/user-attachments/assets/3c1ff859-6da1-4d89-87ec-9fb2ee7cee3d)
+![REVOMOD_8](https://github.com/user-attachments/assets/aa840f0c-5472-4bab-ac20-dbfb3dd6efed)
 
 NOTE:  The SHOW/HIDE flag is not fully vetted.  This is what I know so far.  ALWAYS WORK FROM A COPY
 
