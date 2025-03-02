@@ -29,13 +29,16 @@ More info is forth coming, but here are the basic steps:
 18. Fuse these scans and then MERGE them.  They should now align and give a good scan result.![Revo_6](https://github.com/user-attachments/assets/244a6699-727f-4e8e-b96b-750a06ab9254)
 
 19. That is the basic.  The rest needs more work but here is what I know so far...
-20. REVO Scan 5 does not really delete Key Frames.  It just FLAGs them as invisible to the model.  You are recover deleted key frames by selecting the [SCANS IN PROJECT] and then pressing [SELECT FOLDER]
-21. The [SCAN FRAMES] window will populate with ALL the scan flag files in each Scan Project. The Frame numbers will correspond with the Frame Numbers in REVO Scan 5.
-22. You can select the frames you want to show and then press [SHOW FRAMES] and it will reset the flags to VISIBLE in that SCAN PROJECT FOLDER.  You must quit and reload the REVO Project for these changes to take effect (I am guessing CASHE memory clearing required)
-23. You can also HIDE KEY FRAMES in this window.  REVO Scan5 starts with FRAME 0 and then increaments by 2 [0,2,4,6 etc].  The list _SHOULD_ be in the the same order but I have been unable to fully verify that.
+20. REVO Scan 5 does not really delete Key Frames.  It just FLAGs them as invisible to the model.  You can recover deleted key frames by selecting the [SCANS IN PROJECT] and then pressing [SELECT FOLDER]
+21. The [SCAN FRAMES] window will populate with ALL the scan flag files in each Scan Project. The Frame numbers correspond with the Frame Numbers in REVO Scan 5. REVO Scan5 starts with FRAME 0 and then increaments by 2 [0,2,4,6 etc].
+22. You can select the frames you want to show and then press [SHOW FRAMES] and it will reset the flags to VISIBLE in that SCAN PROJECT FOLDER.
+23. You can also HIDE KEY FRAMES in this window.
+24. You must reload the REVO Project for these changes to take effect (I am guessing CASHE memory clearing required)
 ![REVOMOD_8](https://github.com/user-attachments/assets/aa840f0c-5472-4bab-ac20-dbfb3dd6efed)
 
-NOTE:  The SHOW/HIDE flag is not fully vetted.  This is what I know so far.  ALWAYS WORK FROM A COPY
+NOTES:  
+  The SHOW/HIDE flag is not fully vetted.  This is what I know so far.  ALWAYS WORK FROM A COPY
+  The Frame number list _SHOULD_ be in the the same order as REVO Scan5 but I have been unable to fully verify that.
 
 Bruce Clark
 version 0.2a
